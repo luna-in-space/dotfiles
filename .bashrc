@@ -8,14 +8,11 @@ case $- in
       *) return;;
 esac
 
-# don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options
 HISTCONTROL=ignoreboth
 
 # append to the history file, don't overwrite it
 shopt -s histappend
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
 HISTSIZE=1000
 HISTFILESIZE=2000
 
@@ -56,11 +53,7 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;35m\]\u@\h\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
+    PS1='${debian_chroot:+($debian_chroot)}>\w\$ '
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
@@ -72,17 +65,29 @@ xterm*|rxvt*)
     ;;
 esac
 
+PS2="]"
+
+#vi mode
+set -o vi
+#automatically type cd infront of a directory
+shopt -s autocd
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
     #alias dir='dir --color=auto'
     #alias vdir='vdir --color=auto'
     alias yt-dl='youtube-dl'
     alias grep='grep --color=auto'
-    alias cp='cp -i'
+    alias cp='cp -iv'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
+    alias picom='compton'
+    alias ls='ls --color=auto -A'
+    alias a='./a.out'
+    alias music='cd ~/music/ && ls'
+    alias mp='for f in *.mp3 ; do ffplay -nodisp -autoexit "$f"; done' 
+    alias mf='for f in *.flac ; do ffplay -nodisp -autoexit "$f"; done' 
 fi
 
 # colored GCC warnings and errors
@@ -117,4 +122,4 @@ if ! shopt -oq posix; then
   fi
 fi
 
-fish
+export PATH=$PATH:/opt/waterfox/
